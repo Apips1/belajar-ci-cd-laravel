@@ -7,33 +7,32 @@ pipeline {
                 checkout scm
             }
         }
-
         stage('Install Dependencies') {
             steps {
                 sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
             }
         }
-
+        stage('Prepare Environment') {
+            steps {
+                sh '''
+                    cp .env.example .env || true
+                    php artisan key:generate
+                '''
+            }
+        }
         stage('Run Tests') {
             steps {
                 sh 'php artisan test'
             }
         }
-
         stage('Build App') {
             steps {
-                echo '✅ Build successful!'
+                echo 'Building Laravel App...'
             }
         }
-
         stage('Deploy') {
-            when {
-                branch 'main'
-            }
             steps {
-                echo '🚀 Deploying to production server...'
-                // contoh deploy (rsync/scp)
-                // sh 'rsync -avz ./ user@yourserver:/var/www/html/'
+                echo 'Deploying Laravel App...'
             }
         }
     }
