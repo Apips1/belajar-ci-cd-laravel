@@ -13,19 +13,24 @@ pipeline {
                 sh 'composer install'
             }
         }
+        
 
         stage('Prepare Environment') {
-            steps {
-                sh '''
-                    cp .env.example .env
-                    php artisan key:generate
-                    php artisan config:clear
-                    php artisan view:clear
-                    php artisan cache:clear
-                    php artisan config:cache
-                '''
-            }
-        }
+    steps {
+        echo '📦 Copy .env file'
+        sh 'cp .env.example .env'
+        sh 'php artisan key:generate'
+        
+        echo '📁 Ensure SQLite database file exists'
+        sh 'mkdir -p database && touch database/database.sqlite'
+        
+        echo '🧹 Clear caches'
+        sh 'php artisan config:clear'
+        sh 'php artisan view:clear'
+        sh 'php artisan cache:clear'
+    }
+}
+
 
         stage('Run Tests') {
             steps {
