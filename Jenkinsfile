@@ -15,7 +15,7 @@ pipeline {
         }
         
 
-        stage('Prepare Environment') {
+      stage('Prepare Environment') {
     steps {
         echo '📦 Copy .env file'
         sh 'cp .env.example .env'
@@ -24,12 +24,16 @@ pipeline {
         echo '📁 Ensure SQLite database file exists'
         sh 'mkdir -p database && touch database/database.sqlite'
         
+        echo '🗄️ Run migrations to create tables'
+        sh 'php artisan migrate --force'
+        
         echo '🧹 Clear caches'
         sh 'php artisan config:clear'
         sh 'php artisan view:clear'
         sh 'php artisan cache:clear'
     }
 }
+
 
 
         stage('Run Tests') {
