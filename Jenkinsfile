@@ -1,30 +1,12 @@
-def slackwebhook https://hooks.slack.com/services/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
 
-post {
-    success {
-        sh """
-        curl -X POST -H 'Content-type: application/json' --data '{
-            "channel": "#laravel",
-            "username": "JenkinsBot",
-            "text": "✅ Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER} on branch ${env.BRANCH_NAME}",
-            "icon_emoji": ":rocket:"
-        }' ${slackWebhook}
-        """
-    }
-    failure {
-        sh """
-        curl -X POST -H 'Content-type: application/json' --data '{
-            "channel": "#laravel",
-            "username": "JenkinsBot",
-            "text": "❌ Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER} on branch ${env.BRANCH_NAME}",
-            "icon_emoji": ":x:"
-        }' ${slackWebhook}
-        """
-    }
-}
+
 
 pipeline {
     agent any
+        environment {
+        SLACK_WEBHOOK = 'https://hooks.slack.com/services/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'
+    }
+
 
     stages {
         stage('Checkout') {
@@ -62,4 +44,27 @@ pipeline {
             }
         }
     }
+    
+post {
+    success {
+        sh """
+        curl -X POST -H 'Content-type: application/json' --data '{
+            "channel": "#laravel",
+            "username": "JenkinsBot",
+            "text": "✅ Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER} on branch ${env.BRANCH_NAME}",
+            "icon_emoji": ":rocket:"
+        }' ${slackWebhook}
+        """
+    }
+    failure {
+        sh """
+        curl -X POST -H 'Content-type: application/json' --data '{
+            "channel": "#laravel",
+            "username": "JenkinsBot",
+            "text": "❌ Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER} on branch ${env.BRANCH_NAME}",
+            "icon_emoji": ":x:"
+        }' ${slackWebhook}
+        """
+    }
+}
 }
