@@ -27,5 +27,11 @@ pipeline {
                 sh 'php artisan test'
             }
         }
+        post {
+    always {
+        sh 'cat storage/logs/laravel.log || true'
+    }
+}
+
     }
 }
