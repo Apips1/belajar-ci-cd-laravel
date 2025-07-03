@@ -19,6 +19,10 @@ pipeline {
                 sh 'cp .env.example .env'
                 sh 'php artisan key:generate'
                 sh 'php artisan config:cache'
+                sh 'php artisan config:clear'
+                sh 'php artisan view:clear'
+                sh 'php artisan cache:clear'
+
             }
         }
 
