@@ -16,21 +16,30 @@ pipeline {
 
         stage('Prepare Environment') {
             steps {
-                sh 'cp .env.example .env'
-                sh 'php artisan key:generate'
-                sh 'php artisan config:cache'
-                sh 'php artisan config:clear'
-                sh 'php artisan view:clear'
-                sh 'php artisan cache:clear'
-
+                sh '''
+                    cp .env.example .env
+                    php artisan key:generate
+                    php artisan config:clear
+                    php artisan view:clear
+                    php artisan cache:clear
+                    php artisan config:cache
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'php artisan test'
+                script {
+                    def result = sh(script: 'php artisan test', returnStatus: true)
+                    if (result != 0) {
+                        echo '❌ Test Gagal - Akan tampilkan log Laravel'
+                        sh 'cat storage/logs/laravel.log || echo "Log tidak ditemukan."'
+                        error("Test gagal!")
+                    } else {
+                        echo '✅ Semua test berhasil!'
+                    }
+                }
             }
         }
-        
     }
 }
