@@ -62,7 +62,7 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{{ route('mahasiswa.index') }}">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>HOME</span></a>
+                    <span>HOMxE</span></a>
             </li>
 
 
